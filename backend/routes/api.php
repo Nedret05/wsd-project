@@ -8,6 +8,10 @@ use App\Http\Controllers\Api\RestaurantController;
 use App\Http\Controllers\Api\PhotoController;
 use App\Http\Controllers\Api\FollowController;
 use App\Http\Controllers\Api\FeedController;
+use App\Http\Controllers\Api\VideoController;
+use App\Http\Controllers\Api\RecommendationController;
+use App\Http\Controllers\Api\WatchHistoryController;
+use App\Http\Controllers\Api\WatchlistController;
 
 Route::get('/health', function () {
     return response()->json([
@@ -19,6 +23,27 @@ Route::get('/echo', [EchoController::class, 'echo']);
 Route::post('/echo', [EchoController::class, 'echo']);
 
 Route::prefix('79000/v1')->group(function () {
+  Route::post(
+    'watchlist',
+    [WatchlistController::class, 'store']
+);
+
+Route::delete(
+    'watchlist/{videoId}',
+    [WatchlistController::class, 'destroy']
+);
+  Route::apiResource('videos', VideoController::class)
+    ->only(['index', 'show', 'store']);
+
+Route::get(
+    'recommendations',
+    [RecommendationController::class, 'index']
+);
+
+Route::get(
+    'continue-watching',
+    [WatchHistoryController::class, 'continueWatching']
+);
   Route::post(
     'users/{id}/follow',
     [FollowController::class, 'follow']
