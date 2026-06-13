@@ -5,13 +5,20 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class TaskController extends Controller
 {
     public function index()
-    {
-        return response()->json(Task::all(), 200);
-    }
+{
+    $tasks = Cache::remember(
+        'tasks.index',
+        now()->addMinutes(10),
+        fn () => Task::all()
+    );
+
+    return response()->json($tasks, 200);
+}
 
     public function store(Request $request)
     {
@@ -23,6 +30,8 @@ class TaskController extends Controller
         ]);
 
         $task = Task::create($validated);
+
+        Cache::forget('tasks.index');
 
         return response()->json($task, 201);
     }
@@ -39,13 +48,15 @@ class TaskController extends Controller
         $task = Task::findOrFail($id);
 
         $task->update($request->only([
-            'title',
-            'description',
-            'status',
-            'album_number'
-        ]));
+    'title',
+    'description',
+    'status',
+    'album_number'
+]));
 
-        return response()->json($task, 200);
+Cache::forget('tasks.index');
+
+return response()->json($task, 200);
     }
 
     public function destroy($id)
@@ -54,6 +65,8 @@ class TaskController extends Controller
 
         $task->delete();
 
-        return response()->noContent();
+Cache::forget('tasks.index');
+
+return response()->noContent();
     }
 }
