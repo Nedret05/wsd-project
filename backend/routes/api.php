@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EchoController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\ShortLinkController;
+use App\Http\Controllers\Api\RestaurantController;
 
 Route::get('/health', function () {
     return response()->json([
@@ -23,4 +24,12 @@ Route::prefix('79000/v1')->group(function () {
 
     Route::apiResource('short-links', ShortLinkController::class)
         ->only(['index', 'store', 'show']);
+
+    Route::get('/restaurants/nearby', [RestaurantController::class, 'nearby']);
+
+    Route::get('/restaurants', [RestaurantController::class, 'index']);
+    Route::post('/restaurants', [RestaurantController::class, 'store']);
+    Route::get('/restaurants/{id}', [RestaurantController::class, 'show']);
+    Route::put('/restaurants/{id}', [RestaurantController::class, 'update']);
+    Route::delete('/restaurants/{id}', [RestaurantController::class, 'destroy']);
 });
