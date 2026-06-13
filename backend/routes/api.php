@@ -5,6 +5,7 @@ use App\Http\Controllers\EchoController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\ShortLinkController;
 use App\Http\Controllers\Api\RestaurantController;
+use App\Http\Controllers\Api\PhotoController;
 
 Route::get('/health', function () {
     return response()->json([
@@ -32,4 +33,7 @@ Route::prefix('79000/v1')->group(function () {
     Route::get('/restaurants/{id}', [RestaurantController::class, 'show']);
     Route::put('/restaurants/{id}', [RestaurantController::class, 'update']);
     Route::delete('/restaurants/{id}', [RestaurantController::class, 'destroy']);
+
+    Route::apiResource('photos', PhotoController::class)
+        ->only(['index', 'store', 'show', 'destroy']);
 });

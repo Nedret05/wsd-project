@@ -99,7 +99,7 @@ class RestaurantController extends Controller
 
         return response()->json($results);
     }
-
+    
     private function distance(
         float $lat1,
         float $lng1,
