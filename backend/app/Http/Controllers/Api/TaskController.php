@@ -10,15 +10,15 @@ use Illuminate\Support\Facades\Cache;
 class TaskController extends Controller
 {
     public function index()
-{
-    $tasks = Cache::remember(
-        'tasks.index',
-        now()->addMinutes(10),
-        fn () => Task::all()
-    );
+    {
+        $tasks = Cache::remember(
+            'tasks.index',
+            now()->addMinutes(10),
+            fn () => Task::all()->toArray()
+        );
 
-    return response()->json($tasks, 200);
-}
+        return response()->json($tasks, 200);
+    }
 
     public function store(Request $request)
     {
@@ -48,15 +48,15 @@ class TaskController extends Controller
         $task = Task::findOrFail($id);
 
         $task->update($request->only([
-    'title',
-    'description',
-    'status',
-    'album_number'
-]));
+            'title',
+            'description',
+            'status',
+            'album_number'
+        ]));
 
-Cache::forget('tasks.index');
+        Cache::forget('tasks.index');
 
-return response()->json($task, 200);
+        return response()->json($task, 200);
     }
 
     public function destroy($id)
@@ -65,8 +65,8 @@ return response()->json($task, 200);
 
         $task->delete();
 
-Cache::forget('tasks.index');
+        Cache::forget('tasks.index');
 
-return response()->noContent();
+        return response()->noContent();
     }
 }
