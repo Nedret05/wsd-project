@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EchoController;
 use App\Http\Controllers\Api\TaskController;
+use App\Http\Controllers\Api\ShortLinkController;
 
 Route::get('/health', function () {
     return response()->json([
@@ -19,4 +20,7 @@ Route::prefix('79000/v1')->group(function () {
     Route::get('/tasks/{id}', [TaskController::class, 'show']);
     Route::put('/tasks/{id}', [TaskController::class, 'update']);
     Route::delete('/tasks/{id}', [TaskController::class, 'destroy']);
+
+    Route::apiResource('short-links', ShortLinkController::class)
+        ->only(['index', 'store', 'show']);
 });
